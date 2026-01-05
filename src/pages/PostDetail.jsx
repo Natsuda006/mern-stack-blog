@@ -1,69 +1,67 @@
-import React, { useState } from "react";
-import DOMPurify from "dompurify";
+import { useState,useEffect } from "react";
+import { useParams } from "react-router";
+import Swal from "sweetalert2";
+import PostService from "../../services/post.service";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 
 const PostDetail = () => {
-  const [post] = useState({
-    id: 1,
-    title: "หินพิซซ่า คืออะไร รู้จักคำศัพท์ยอดฮิตที่มาจาก TikTok",
-    cover:
-      "https://s.isanook.com/ns/0/ud/1972/9861118/pizza.jpg?ip/crop/w1200h700/q80/webp",
-    author: "s.isanook",
-    createdAt: "08 ธ.ค. 68 (14:32 น)",
-    content: `
-      <p>
-        ในช่วงที่ผ่านมา เทรนด์การพกหินมงคลเพื่อเสริมพลังบวกกำลังมาแรงมาก
-        โดยเฉพาะใน TikTok ที่ "พิซซ่า (@pizzanaraa)" โด่งดังขึ้นมาจากคลิป
-        ให้กำลังใจคนดูแบบน่ารัก ๆ จนกลายเป็นคำฮิตว่า "หินพิซซ่า"
-      </p>
-
-      <p>
-        ผู้คนแซวกันว่า หากพก "หินพิซซ่า" ติดตัว จะช่วยเพิ่มพลังใจดี ๆ
-        และทำให้สามารถต่อสู้กับวันที่เหนื่อยล้าได้เหมือนที่พิซซ่าบอกไว้
-      </p>
-
-      <p>
-        เทรนด์นี้กลายเป็นไวรัล และมีผู้คนจำนวนมากแชร์ประสบการณ์ว่าพอพกหินแล้ว
-        ทำให้รู้สึกดีขึ้นจริง ๆ เพราะเกิดจากแรงสนับสนุนทางใจ
-      </p>
-    `,
+  const { id } = useParams();
+    const { userInfo} = useContext(UserContext);
+  const [post, setPost] = useState({
+    _id: "",
+    title: "",
+    createdAt: " ",
+    author: " ",
+    content:
+      "",
   });
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await PostService.GetById(id);
+        if (response.status === 200) {
+          setPost(response.data);
+        }
+      } catch (error) {
+        Swal.fire({
+          title: "PostDetail Error",
+          text: error?.response?.data?.message || error.message || "Failed to load post detail",
+          icon: "error"
+        });
+      }
+    };
+    fetchPost();
+  }, [id])
 
+ 
   return (
-    <div className="w-full bg-base-100 pb-12">
-      {/* Cover Image */}
-      <div className="w-full h-[350px] md:h-[480px] overflow-hidden">
-        <img
-          src={post.cover}
-          alt={post.title}
-          className="w-full h-full object-cover"
-        />
-      </div>
-
-      {/* Content Container */}
-      <div className="max-w-3xl mx-auto px-5 mt-10">
-
-        {/* Title */}
-        <h1 className="text-3xl md:text-4xl font-bold leading-snug">
-          {post.title}
-        </h1>
-
-        {/* Author info */}
-        <div className="flex items-center text-gray-500 mt-4 gap-2">
-          <span className="font-medium">{post.author}</span>
-          <span className="text-gray-400">•</span>
-          <span>{post.createdAt}</span>
+    <div className="post-page min-h-full min-w-full items-center justify-center p-4 pt-20">
+      <div className="bg-white p-8 rounded-b-lg shadow-lg max-4xl w-full">
+        <h1 className="text-3xl font-bold mb-4 text-grey-800">{post.title}</h1>
+        <div className="text-grey-600 mb-4 text-center">
+          <time className="block mb-2">{post.createdAt}</time>
+          <div className="author mb-2">
+            By{""}
+             <span className="text-blue-500">
+              @
+              <a href={`/author/${post?.author?._id}`}>
+              {post?.author?.username}
+              </a>
+              </span>
+          </div>
+          {userInfo?.id === post?.author?._id &&(
+<div className="edit-row mb-4 text-center flex item-center justify-center space-x-2">
+  <a className="btn btn-warning" href={`/edit/${post?._id}`}>Edit Post</a>
+  <a className="btn btn-error" >Delete Post</a>
+            </div>
+          )}
+          
         </div>
-
-        {/* Separator */}
-        <div className="border-b mt-6 mb-8"></div>
-
-        {/* Content */}
-        <div
-          className="prose prose-lg max-w-none leading-8 text-gray-800"
-          dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(post.content),
-          }}
-        ></div>
+        <div className="content text-grey-700">
+          {post.content}
+         
+        </div>
       </div>
     </div>
   );

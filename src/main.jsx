@@ -3,9 +3,12 @@ import { createRoot } from 'react-dom/client'
 import { RouterProvider } from "react-router";
 import router from './routers/Index.jsx';
 import './index.css';
+import { UserContextProvider } from './context/UserContextProvider.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <UserContextProvider>
+      <RouterProvider router={router} />
+    </UserContextProvider>
   </StrictMode>,
 )

@@ -8,13 +8,14 @@ import PostByAuthor from "../pages/PostByAuthor.jsx";
 import PostDetail from "../pages/PostDetail.jsx";
 import Create from "../pages/Create.jsx";
 import Edit from "../pages/Edit.jsx";
+import NotAllowed from "../pages/NotAllowed.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
     children: [
-        {
+      {
         path: "/",
         element: <Home />
       },
@@ -28,7 +29,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/post/:id",
-        element: <PostDetail/>
+        element: <PostDetail />
       },
       {
         path: "/create",
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: "author/:id",
         element: <PostByAuthor />
+      },
+      {
+        path: "/notallowed",
+        element: <NotAllowed />
       }
     ],
   },

@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router";
-import Navbar from "../components/Navbar";
+import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 const MainLayout = () => {
@@ -9,7 +9,7 @@ const MainLayout = () => {
 
       {/* Navbar (fixed) */}
       <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/10 shadow-sm">
-        <Navbar />
+        <Header />
       </header>
 
       {/* Background Gradient */}

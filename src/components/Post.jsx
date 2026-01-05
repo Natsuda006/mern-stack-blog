@@ -1,80 +1,45 @@
-// import React from 'react';
-
-// const Post = ({ postDetail, index = 0 }) => {
-//   const { id, title, cover, author, createdAt, summary } = postDetail;
-//   const isEven = index % 2 === 0;
-
-//   return (
-//     <a
-//       href={`/post/${id}`}
-//       className={`card card-side bg-base-100 shadow-sm ${isEven ? "flex-row" : "flex-row-reverse"}`}
-//       key={id}
-//     >
-//       <figure className="md:w-1/2 flex items-center">
-//         <img src={cover} alt={title} className="w-full h-64 object-cover" />
-//       </figure>
-
-//       <div className="card-body">
-//         <h2 className="card-title">{title}</h2>
-//         <p>{author} | {createdAt}</p>
-//         <p>{summary}</p>
-//       </div>
-//     </a>
-//   );
-// };
-
-// export default Post;
 import React from 'react';
 import { Link } from "react-router-dom";
 
-const Post = ({ postDetail, index = 0, onDelete }) => {
-  const { id, title, cover, author, createdAt, summary } = postDetail;
+const Post = ({  title, cover, author, createdAt, summary, _id, index = 0 }) => {
   const isEven = index % 2 === 0;
 
   return (
     <div
-      className={`card card-side bg-base-100 shadow-sm ${isEven ? "flex-row" : "flex-row-reverse"}`}
-      key={id}
+      className={`card card-side bg-base-100 shadow-sm hover:shadow-md transition duration-200 ${isEven ? "flex-row" : "flex-row-reverse"}`}
     >
-      <figure className="md:w-1/2 flex items-center">
-        <img src={cover} alt={title} className="w-full h-64 object-cover" />
+      <figure className="md:w-1/2 flex items-center overflow-hidden">
+        <Link to={`/post/${_id}`} className="w-full h-full">
+          <img src={cover} alt={title} className="w-full h-64 object-cover hover:scale-105 transition-transform duration-300" />
+        </Link>
       </figure>
 
-      <div className="card-body">
-        <h2 className="card-title">
-          <Link to={`/post/${id}`} className="hover:underline">
+      <div className="card-body md:w-1/2">
+        <h2 className="card-title leading-snug">
+          <Link to={`/post/${_id}`} className="hover:text-blue-600 transition-colors">
             {title}
           </Link>
         </h2>
 
-        <p>
-          <Link
-            to={`/author/${author}`}
-            className="text-blue-600 hover:underline"
+        <p className="text-sm text-gray-500 mb-2">
+          By <Link
+            to={`/author/${author?._id || author}`}
+            className="text-blue-600 hover:underline font-medium"
           >
-            {author}
+            {author?.username || author}
           </Link>{" "}
-          | {createdAt}
+          • {createdAt}
         </p>
 
-        <p>{summary}</p>
+        <p className="text-gray-600 line-clamp-3 mb-4">{summary}</p>
 
-        {/* ⭐ ปุ่ม Edit / Delete */}
-        <div className="flex gap-3 mt-4">
-          <Link
-            to={`/edit/${id}`}
-            className="btn btn-sm btn-warning text-white"
-          >
-            Edit
+        {/* Optional: Read More Button */}
+        <div className="card-actions justify-end">
+          <Link to={`/post/${_id}`} className="btn btn-sm btn-outline btn-primary">
+            Read More
           </Link>
-
-          <button
-            onClick={() => onDelete(id)}
-            className="btn btn-sm btn-error text-white"
-          >
-            Delete
-          </button>
         </div>
+
       </div>
     </div>
   );
