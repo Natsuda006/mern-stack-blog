@@ -8,6 +8,13 @@ const getAccessToken = () => {
 
 const getUser = () => {
   const user = cookie.get("user");
+  if (typeof user === "string") {
+    try {
+      return JSON.parse(user);
+    } catch {
+      return null;
+    }
+  }
   return user;
 };
 
